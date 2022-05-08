@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
@@ -34,13 +34,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
     }
 
-    void FixedUpdate() 
+    private void FixedUpdate() 
     {
         #region walk_jump
         if ((moveX > 0.1f || moveX < -0.1f) && !isDisable) {
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
         #region death
         rotateDeath = gameObject.transform.localRotation.eulerAngles.z;
 
-        if (((rotateDeath > 85 && rotateDeath < 95) || (rotateDeath < 280 && rotateDeath > 270)) && !isDisable && !isDeathCount) {
+        if (((rotateDeath > 85 && rotateDeath < 95) || (rotateDeath < 280 && rotateDeath > 270) || (rotateDeath > 179 && rotateDeath < 181)) && !isDisable && !isDeathCount) {
             Debug.Log("Enter on " + rotateDeath);
             Thread t1 = new Thread(OnDeath);
             t1.Start();
@@ -76,9 +76,9 @@ public class PlayerController : MonoBehaviour
         #endregion
     }
 
-    void OnDeath() 
+    private void OnDeath() 
     {
-        for (int i = 5; i > 0; i--) {
+        for (var i = 5; i > 0; i--) {
             Debug.Log("Player Die in " + i);
             Thread.Sleep(1000);
             if (rotateDeath < 85 || rotateDeath > 280) {
@@ -88,22 +88,22 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-        if ((rotateDeath > 85 && rotateDeath < 95) || (rotateDeath < 280 && rotateDeath > 270)) {
+        if ((rotateDeath > 85 && rotateDeath < 95) || (rotateDeath < 280 && rotateDeath > 270) || (rotateDeath > 179 && rotateDeath < 181)) {
             isDisable = true;
             Debug.Log("Player has been disabled");
         } 
     }
     
-    void OnTriggerEnter2D(Collider2D collision) 
+    private void OnTriggerEnter2D(Collider2D collision) 
     {
-        if (collision.gameObject.tag == "Ground") {
+        if (collision.gameObject.CompareTag("Ground")) {
             isJumping = false;
             animator.SetBool("isJumping", false);
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.tag == "Ground") {
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Ground")) {
             isJumping = true;
             animator.SetBool("isJumping", true);
         }
