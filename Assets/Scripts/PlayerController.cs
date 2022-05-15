@@ -96,14 +96,14 @@ public class PlayerController : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        if (collision.gameObject.CompareTag("Ground")) {
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Box")) {
             isJumping = false;
             animator.SetBool("isJumping", false);
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Ground")) {
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Box")) {
             isJumping = true;
             animator.SetBool("isJumping", true);
         }
