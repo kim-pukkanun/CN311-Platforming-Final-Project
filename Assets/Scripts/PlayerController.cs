@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -61,6 +62,10 @@ public class PlayerController : MonoBehaviour
             t1.Start();
             isDeathCount = true;
         }
+
+        if (isDisable) {
+            SceneManager.LoadScene(1);
+        }
         #endregion
 
         #region animCheck
@@ -92,6 +97,8 @@ public class PlayerController : MonoBehaviour
             isDisable = true;
             Debug.Log("Player has been disabled");
         } 
+
+        isDeathCount = false;
     }
     
     private void OnTriggerEnter2D(Collider2D collision) 
