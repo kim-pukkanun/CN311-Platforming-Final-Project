@@ -24,12 +24,4 @@ public class JoinGame : MonoBehaviour
         }
         
     }
-
-    public void GetIP(string IP) {
-        Debug.Log(IP);
-    }
-
-    public void GetPort(string port) {
-        Debug.Log(port);
-    }
 }
