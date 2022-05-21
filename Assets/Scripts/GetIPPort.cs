@@ -1,6 +1,9 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GetIPPort : MonoBehaviour
 {
@@ -17,7 +20,17 @@ public class GetIPPort : MonoBehaviour
         Port = port;
     }
 
-    public void ConnectServer() {
-        Debug.Log("You have connect to " + IP + ", " + Port);
+    public void ConnectServer()
+    {
+        Int32 SocketPort = Convert.ToInt32(Port);
+
+        if (SocketController.SetConnection(IP, SocketPort))
+        {
+            Debug.Log("You have connect to " + IP + ":" + Port);
+            SocketHandler socketHandler = new SocketHandler();
+            Thread thread = new Thread(socketHandler.Handle);
+            thread.Start();
+            SceneManager.LoadScene(1);
+        }
     }
 }
