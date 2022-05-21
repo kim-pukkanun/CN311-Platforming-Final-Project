@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
         isDisable = false;
         isDeathCount = false;
+
     }
 
     // Update is called once per frame
@@ -39,6 +40,8 @@ public class PlayerController : MonoBehaviour
     {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
+
+        Debug.Log(gameObject.transform.position);
     }
 
     private void FixedUpdate() 
