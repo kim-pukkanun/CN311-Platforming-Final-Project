@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,34 +17,33 @@ public class PlayerController : MonoBehaviour
     private float moveY;
     private float rotateDeath;
 
-    public string playerID;
+    public string playerID = "Player";
 
     public bool isDisable = false;
     public bool isSocket = false; 
     public bool isDeathCount = false;
-
-
-    private void Awake()
-    {
-        if (playerID != gameObject.name) {
-            isSocket = true;
-        }
-    }
-
+    
     // Start is called before the first frame update
     private void Start()
     {
+        if (!playerID.Equals("Player")) {
+            isSocket = true;
+        }
+
         rb2D = gameObject.GetComponent<Rigidbody2D>();
         animator = gameObject.GetComponent<Animator>();
+
+        gameObject.transform.position = new Vector3(-5.21f, -1.61f, 0.0f);
 
         moveSpeed = 1f;
         jumpForce = 20f;
         isJumping = false;
     }
-
+    
     // Update is called once per frame
     private void Update()
     {
+        //scene = SceneManager.GetActiveScene().buildIndex;
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 

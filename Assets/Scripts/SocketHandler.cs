@@ -34,10 +34,15 @@ public class SocketHandler
         {
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                GameObject gameObject = new GameObject("Playerrrr");
-                AddPlayer player = gameObject.AddComponent<AddPlayer>();
-                player.player = GameObject.Find("Player");
-                player.CreatePlayer();
+                String playerId = "Player " + data.ClientID;
+                AddPlayer.CreatePlayer(playerId);
+            });
+        } else if (data.Type == "Disconnect")
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                String playerId = "Player " + data.ClientID;
+                AddPlayer.RemovePlayer(playerId);
             });
         }
         Debug.Log(data.Type + " " + data.ClientID);

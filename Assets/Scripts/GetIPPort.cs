@@ -11,12 +11,12 @@ public class GetIPPort : MonoBehaviour
     private static string Port;
 
     public void GetIP(string ip) {
-        Debug.Log("Your IP: " + ip);
+        //Debug.Log("Your IP: " + ip);
         IP = ip;
     }
 
     public void GetPort(string port) {
-        Debug.Log("Your Port: " + port);
+        //Debug.Log("Your Port: " + port);
         Port = port;
     }
 
