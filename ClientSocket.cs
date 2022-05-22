@@ -13,7 +13,7 @@ namespace CN311_Platforming_Final_Project_Server
             NetworkStream stream = ClientCollection.GetInstance()[clientNo].GetStream();
             stream.Write(sendBytes, 0, sendBytes.Length);
             stream.Flush();
-            Console.WriteLine("[SERVER]: Send data to Client {0}.", clientNo);
+            //Console.WriteLine("[SERVER]: Send data to Client {0}.", clientNo);
         }
         public static void SendAll(String message, String exceptNo = null)
         {
@@ -26,7 +26,7 @@ namespace CN311_Platforming_Final_Project_Server
                 {
                     client.Value.GetStream().Write(sendBytes, 0, sendBytes.Length);
                     client.Value.GetStream().Flush();
-                    Console.WriteLine("[SERVER]: Send data to Client {0}.", client.Key);
+                    //Console.WriteLine("[SERVER]: Send data to Client {0}.", client.Key);
                 }
             }
         }
