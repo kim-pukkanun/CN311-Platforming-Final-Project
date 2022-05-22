@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public bool isDisable = false;
     public bool isSocket = false; 
     public bool isDeathCount = false;
+
+    private Vector3 position;
     
     // Start is called before the first frame update
     private void Start()
@@ -52,6 +54,24 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        if (!position.Equals(gameObject.transform.position))
+        {
+            position = gameObject.transform.position;
+            String playerPosition = JsonUtility.ToJson(new JsonPlayerPosition
+            {
+                ClientID = SocketController.clientId,
+                X = gameObject.transform.position.x,
+                Y = gameObject.transform.position.y
+            });
+            JsonFormat format = new JsonFormat
+            {
+                Type = "PlayerPosition",
+                Data = playerPosition
+            };
+            SocketController.SendData(JsonUtility.ToJson(format));
+            //Debug.Log(position);
+        }
+        
         if (!isSocket) {
             #region walk_jump
             if ((moveX > 0.1f || moveX < -0.1f) && !isDisable) {

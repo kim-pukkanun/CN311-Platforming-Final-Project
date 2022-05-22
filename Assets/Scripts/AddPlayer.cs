@@ -23,7 +23,7 @@ public class AddPlayer : MonoBehaviour
         GameObject newPlayer = null;
         GameObject player = GameObject.Find("Player");
         newPlayer = Instantiate(player, new Vector3(0.0f, 0, 0), Quaternion.identity);
-        newPlayer.name = playerId;
+        newPlayer.name = "Player " + playerId;
         newPlayer.GetComponent<PlayerController>().playerID = playerId;
         GetCollection().Add(playerId, newPlayer);
         DontDestroyOnLoad(newPlayer);
@@ -34,6 +34,6 @@ public class AddPlayer : MonoBehaviour
         GameObject player = playerCollection[playerId];
         Destroy(player);
         GetCollection().Remove(playerId);
-        Debug.Log(playerId + " disconnected.");
+        Debug.Log("Player "+ playerId + " disconnected.");
     }
 }
