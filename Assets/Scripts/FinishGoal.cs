@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class FinishGoal : MonoBehaviour
 {
-
     public int sceneChange;
 
     private void OnTriggerEnter2D(Collider2D collision) {
