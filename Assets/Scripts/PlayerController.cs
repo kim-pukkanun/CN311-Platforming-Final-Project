@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
 
-        // gameObject.transform.position = new Vector3(x, y, 0);
     }
 
     private void FixedUpdate() 
