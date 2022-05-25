@@ -30,8 +30,9 @@ namespace CN311_Platforming_Final_Project_Server
         public float MoveX { get; set; }
     }
 
-    public class JsonActivePlayer
+    public class JsonOnConnect
     {
+        public String ClientID { get; set; }
         public String[] Players { get; set; }
     }
 }

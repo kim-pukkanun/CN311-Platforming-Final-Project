@@ -29,7 +29,7 @@ namespace CN311_Platforming_Final_Project_Server
 
         private void Handle()
         {
-            SendActivePlayer();
+            //SendActivePlayer();
             Byte[] bytesFrom = new Byte[4096];
             Byte[] sendBytes = null;
             String data = String.Empty;
@@ -140,33 +140,39 @@ namespace CN311_Platforming_Final_Project_Server
 
         private void SendClientId()
         {
+            JsonOnConnect connect = new JsonOnConnect
+            {
+                ClientID = clientNo,
+                Players = ClientCollection.GetInstance().Keys.Where(i => i != clientNo).ToArray()
+            };
+            
             JsonFormat format = new JsonFormat
             {
-                Type = "MyID",
-                Data = clientNo
+                Type = "OnConnect",
+                Data = JsonSerializer.Serialize(connect)
             };
             
             String json = JsonSerializer.Serialize(format);
             ClientSocket.Send(json, clientNo);
         }
 
-        private void SendActivePlayer()
-        {
-            String[] players = ClientCollection.GetInstance().Keys.Where(i => i != clientNo).ToArray();
-            JsonActivePlayer playerFormat = new JsonActivePlayer
-            {
-                Players = players
-            };
-
-            JsonFormat format = new JsonFormat
-            {
-                Type = "ActivePlayers",
-                Data = JsonSerializer.Serialize(playerFormat)
-            };
-
-            String json = JsonSerializer.Serialize(format);
-            ClientSocket.Send(json, clientNo);
-            //Console.WriteLine(players.Length);
-        }
+        // private void SendActivePlayer()
+        // {
+        //     String[] players = ClientCollection.GetInstance().Keys.Where(i => i != clientNo).ToArray();
+        //     JsonActivePlayer playerFormat = new JsonActivePlayer
+        //     {
+        //         Players = players
+        //     };
+        //
+        //     JsonFormat format = new JsonFormat
+        //     {
+        //         Type = "ActivePlayers",
+        //         Data = JsonSerializer.Serialize(playerFormat)
+        //     };
+        //
+        //     String json = JsonSerializer.Serialize(format);
+        //     ClientSocket.Send(json, clientNo);
+        //     //Console.WriteLine(players.Length);
+        // }
     }
 }
