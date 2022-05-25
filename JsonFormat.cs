@@ -26,5 +26,12 @@ namespace CN311_Platforming_Final_Project_Server
         public String ClientID { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
+        public float Rotate { get; set; }
+        public float MoveX { get; set; }
+    }
+
+    public class JsonActivePlayer
+    {
+        public String[] Players { get; set; }
     }
 }

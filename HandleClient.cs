@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
@@ -20,15 +21,18 @@ namespace CN311_Platforming_Final_Project_Server
             ClientCollection.Add(clientNo, tcpClient);
             OnConnect("Connect");
             SendClientId();
+            Thread.Sleep(100);
+
             Thread thread = new Thread(Handle);
             thread.Start();
         }
 
         private void Handle()
         {
+            SendActivePlayer();
             Byte[] bytesFrom = new Byte[4096];
             Byte[] sendBytes = null;
-            String data;
+            String data = String.Empty;
 
             while (true)
             {
@@ -40,61 +44,69 @@ namespace CN311_Platforming_Final_Project_Server
                     {
                         data = System.Text.Encoding.ASCII.GetString(bytesFrom, 0, i);
                         //Console.WriteLine(data);
-                        if (!data.Equals("alive"))
-                        {
-                            try
-                            {
-                                JsonFormat response = JsonSerializer.Deserialize<JsonFormat>(data);
-                                String resFormat = String.Empty;
-                                String type = String.Empty;
-                                String clientId = String.Empty;
-
-                                switch (response.Type)
-                                {
-                                    // case "MoveScene":
-                                    //     JsonEvent jEvent = JsonSerializer.Deserialize<JsonEvent>(response.Data);
-                                    //     type = "MoveScene";
-                                    //     resFormat = JsonSerializer.Serialize(new JsonEvent
-                                    //     {
-                                    //         Type = "MoveScene",
-                                    //         ClientID = jEvent.ClientID,
-                                    //         Info = null
-                                    //     });
-                                    //     break;
-                                    case "PlayerPosition":
-                                        JsonPlayerPosition playerPosition =
-                                            JsonSerializer.Deserialize<JsonPlayerPosition>(response.Data);
-                                        type = "PlayerPosition";
-                                        clientId = playerPosition.ClientID;
-                                        resFormat = JsonSerializer.Serialize(new JsonPlayerPosition
-                                        {
-                                            ClientID = playerPosition.ClientID,
-                                            X = playerPosition.X,
-                                            Y = playerPosition.Y
-                                        });
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                if (!String.IsNullOrEmpty(resFormat))
-                                {
-                                    JsonFormat format = new JsonFormat
-                                    {
-                                        Type = type,
-                                        Data = resFormat
-                                    };
-
-                                    ClientSocket.SendAll(JsonSerializer.Serialize(format), clientId);
-                                }
-                                //Console.WriteLine("[Client {0}]: {1}", clientNo, data);
-                            }
-                            catch (JsonException e)
-                            {
-                                Console.WriteLine("[ERROR]: " + e);
-                            }
-                        }
                         break;
+                    }
+                    
+                    Console.WriteLine(data);
+                    if (!data.Equals("alive"))
+                    {
+                        try
+                        {
+                            JsonFormat response = JsonSerializer.Deserialize<JsonFormat>(data);
+                            String resFormat = String.Empty;
+                            String type = String.Empty;
+                            String clientId = String.Empty;
+
+                            switch (response.Type)
+                            {
+                                case "MoveScene":
+                                    JsonEvent jEvent = JsonSerializer.Deserialize<JsonEvent>(response.Data);
+                                    type = "MoveScene";
+                                    resFormat = JsonSerializer.Serialize(new JsonEvent
+                                    {
+                                        Type = "MoveScene",
+                                        ClientID = jEvent.ClientID,
+                                        Info = jEvent.Info
+                                    });
+                                    break;
+                                case "Death":
+                                    type = "Death";
+                                    resFormat = response.Data;
+                                    break;
+                                case "PlayerPosition":
+                                    JsonPlayerPosition playerPosition =
+                                        JsonSerializer.Deserialize<JsonPlayerPosition>(response.Data);
+                                    type = "PlayerPosition";
+                                    clientId = playerPosition.ClientID;
+                                    resFormat = JsonSerializer.Serialize(new JsonPlayerPosition
+                                    {
+                                        ClientID = playerPosition.ClientID,
+                                        X = playerPosition.X,
+                                        Y = playerPosition.Y,
+                                        Rotate = playerPosition.Rotate,
+                                        MoveX = playerPosition.MoveX
+                                    });
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            if (!String.IsNullOrEmpty(resFormat))
+                            {
+                                JsonFormat format = new JsonFormat
+                                {
+                                    Type = type,
+                                    Data = resFormat
+                                };
+
+                                ClientSocket.SendAll(JsonSerializer.Serialize(format), clientId);
+                            }
+                            //Console.WriteLine("[Client {0}]: {1}", clientNo, data);
+                        }
+                        catch (JsonException e)
+                        {
+                            Console.WriteLine("[ERROR]: " + e);
+                        }
                     }
                 }
                 catch (IOException e)
@@ -128,15 +140,33 @@ namespace CN311_Platforming_Final_Project_Server
 
         private void SendClientId()
         {
-            JsonEvent format = new JsonEvent
+            JsonFormat format = new JsonFormat
             {
                 Type = "MyID",
-                ClientID = clientNo,
-                Info = null
+                Data = clientNo
             };
             
             String json = JsonSerializer.Serialize(format);
             ClientSocket.Send(json, clientNo);
+        }
+
+        private void SendActivePlayer()
+        {
+            String[] players = ClientCollection.GetInstance().Keys.Where(i => i != clientNo).ToArray();
+            JsonActivePlayer playerFormat = new JsonActivePlayer
+            {
+                Players = players
+            };
+
+            JsonFormat format = new JsonFormat
+            {
+                Type = "ActivePlayers",
+                Data = JsonSerializer.Serialize(playerFormat)
+            };
+
+            String json = JsonSerializer.Serialize(format);
+            ClientSocket.Send(json, clientNo);
+            //Console.WriteLine(players.Length);
         }
     }
 }

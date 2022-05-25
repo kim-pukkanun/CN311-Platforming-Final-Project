@@ -10,7 +10,7 @@ namespace CN311_Platforming_Final_Project_Server
         /*
          * Define your IP address and Port here.
          */
-        private const String Ip = "127.0.0.1";
+        private const String Ip = "192.168.1.104";
         private const Int32 Port = 13000;
         
         static void Main(string[] args)
