@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SocketHandler
 {
@@ -23,11 +25,20 @@ public class SocketHandler
                 Debug.Log(format.Type);
                 switch (format.Type)
                 {
+                    case "ActivePlayers":
+                        OnActivePlayers(JsonUtility.FromJson<JsonActivePlayer>(format.Data));
+                        break;
                     case "Connection":
                         OnConnection(JsonUtility.FromJson<JsonConnection>(format.Data));
                         break;
                     case "PlayerPosition":
                         OnPlayerPosition(JsonUtility.FromJson<JsonPlayerPosition>(format.Data));
+                        break;
+                    case "MoveScene":
+                        OnMoveScene(JsonUtility.FromJson<JsonEvent>(format.Data));
+                        break;
+                    case "Death":
+                        OnDeath();
                         break;
                     default:
                         break;
@@ -65,6 +76,46 @@ public class SocketHandler
             GameObject player = AddPlayer.GetCollection()[data.ClientID];
             //Debug.Log(player.transform.position);
             player.transform.position = new Vector3(data.X, data.Y, 0.0f);
+            player.transform.eulerAngles = new Vector3(0, 0, data.Rotate);
+
+            PlayerController controller = player.GetComponent<PlayerController>();
+            if (data.MoveX > 0.1f && !controller.isDisable) {
+                controller.animator.SetBool("isRunning", true);
+                player.transform.localScale = new Vector2(1, 1);
+            } else if (data.MoveX < -0.1f && !controller.isDisable) {
+                controller.animator.SetBool("isRunning", true);
+                player.transform.localScale = new Vector2(-1, 1);
+            } else {
+                controller.animator.SetBool("isRunning", false);
+            }
+        });
+    }
+
+    private void OnActivePlayers(JsonActivePlayer data)
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            foreach (String player in data.Players)
+            {
+                AddPlayer.CreatePlayer(player);
+            }
+        });
+    }
+
+    private void OnMoveScene(JsonEvent data)
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            Debug.Log("Move to scene" + data.Info);
+            SceneManager.LoadScene(Convert.ToInt32(data.Info));
+        });
+    }
+    
+    private void OnDeath()
+    {
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            SceneManager.LoadScene(1);
         });
     }
 }

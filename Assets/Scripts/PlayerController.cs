@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb2D;
-    private Animator animator;
+    public Animator animator;
 
     public float moveSpeed;
     public float jumpForce;
@@ -60,7 +60,9 @@ public class PlayerController : MonoBehaviour
             {
                 ClientID = SocketController.clientId,
                 X = gameObject.transform.position.x,
-                Y = gameObject.transform.position.y
+                Y = gameObject.transform.position.y,
+                Rotate = gameObject.transform.localRotation.eulerAngles.z,
+                MoveX = moveX
             });
             JsonFormat format = new JsonFormat
             {
@@ -125,6 +127,22 @@ public class PlayerController : MonoBehaviour
         
         if ((rotateDeath > 85 && rotateDeath < 95) || (rotateDeath < 280 && rotateDeath > 270) || (rotateDeath > 179 && rotateDeath < 181)) {
             isDisable = true;
+            
+            // JsonEvent eventFormat = new JsonEvent
+            // {
+            //     Type = "Death",
+            //     ClientID = SocketController.clientId,
+            //     Info = null
+            // };
+            JsonFormat format = new JsonFormat
+            {
+                Type = "Death",
+                Data = SocketController.clientId
+            };
+            
+            String str = JsonUtility.ToJson(format);
+            SocketController.SendData(str);
+            
             Debug.Log("Player has been disabled");
         } 
 

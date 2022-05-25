@@ -24,4 +24,11 @@ public class JsonPlayerPosition
     public String ClientID;
     public float X;
     public float Y;
+    public float Rotate;
+    public float MoveX;
+}
+
+public class JsonActivePlayer
+{
+    public String[] Players;
 }

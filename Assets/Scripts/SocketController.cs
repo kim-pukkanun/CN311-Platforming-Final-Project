@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading;
 using UnityEngine;
 
 public static class SocketController
 {
-    private static TcpClient client;
+    public static TcpClient client;
     public static String clientId;
+    private static bool sent;
     
     public static bool SetConnection(String ip, Int32 port)
     {
@@ -16,11 +18,11 @@ public static class SocketController
             NetworkStream stream = client.GetStream();
             Int32 bytes = stream.Read(data, 0, data.Length);
             String responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            JsonEvent format = JsonUtility.FromJson<JsonEvent>(responseData);
+            JsonFormat format = JsonUtility.FromJson<JsonFormat>(responseData);
             
             if (format.Type == "MyID")
             {
-                clientId = format.ClientID;
+                clientId = format.Data;
             }
 
             return true;
@@ -43,6 +45,7 @@ public static class SocketController
 
     public static void SendData(String message)
     {
+        //Thread.Sleep(15);
         Byte[] data = new Byte[4096];
         data = System.Text.Encoding.ASCII.GetBytes(message);
         NetworkStream stream = client.GetStream();

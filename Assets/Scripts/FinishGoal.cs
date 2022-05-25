@@ -11,14 +11,21 @@ public class FinishGoal : MonoBehaviour
         if (collision.gameObject.CompareTag("Box")) {
             SceneManager.LoadScene(sceneChange);
 
-            // JsonEvent format = new JsonEvent
-            // {
-            //     Type = "MoveScene",
-            //     ClientID = SocketController.clientId,
-            //     Info = null
-            // };
-            // String str = JsonUtility.ToJson(format);
-            //
+            JsonEvent eventFormat = new JsonEvent
+            {
+                Type = "MoveScene",
+                ClientID = SocketController.clientId,
+                Info = Convert.ToString(sceneChange)
+            };
+            JsonFormat format = new JsonFormat
+            {
+                Type = "MoveScene",
+                Data = JsonUtility.ToJson(eventFormat)
+            };
+            
+            String str = JsonUtility.ToJson(format);
+            SocketController.SendData(str);
+            
             // Byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
             //
             // NetworkStream stream = SocketController.GetInstance().GetStream();
