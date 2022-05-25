@@ -111,6 +111,11 @@ public class PlayerController : MonoBehaviour
             }
             #endregion
         }
+
+        // Temporary fix for not be able to jump
+        if (Input.GetKeyDown("space")) {
+            isJumping = false;
+        }
     }
 
     private void OnDeath() 
