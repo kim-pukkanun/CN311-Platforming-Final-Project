@@ -20,9 +20,21 @@ public static class SocketController
             String responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
             JsonFormat format = JsonUtility.FromJson<JsonFormat>(responseData);
             
-            if (format.Type == "MyID")
+            if (format.Type == "OnConnect")
             {
-                clientId = format.Data;
+                JsonOnConnect connect = JsonUtility.FromJson<JsonOnConnect>(format.Data);
+                clientId = connect.ClientID;
+                OnConnect onConnect = new OnConnect();
+                onConnect.Players = connect.Players;
+                Thread thread = new Thread(onConnect.Start);
+                thread.Start();
+                // UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                // {
+                //     foreach (String player in connect.Players)
+                //     {
+                //         AddPlayer.CreatePlayer(player);
+                //     }
+                // });
             }
 
             return true;

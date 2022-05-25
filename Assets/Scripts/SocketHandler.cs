@@ -25,9 +25,9 @@ public class SocketHandler
                 Debug.Log(format.Type);
                 switch (format.Type)
                 {
-                    case "ActivePlayers":
-                        OnActivePlayers(JsonUtility.FromJson<JsonActivePlayer>(format.Data));
-                        break;
+                    // case "ActivePlayers":
+                    //     OnActivePlayers(JsonUtility.FromJson<JsonActivePlayer>(format.Data));
+                    //     break;
                     case "Connection":
                         OnConnection(JsonUtility.FromJson<JsonConnection>(format.Data));
                         break;
@@ -91,16 +91,16 @@ public class SocketHandler
         });
     }
 
-    private void OnActivePlayers(JsonActivePlayer data)
-    {
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        {
-            foreach (String player in data.Players)
-            {
-                AddPlayer.CreatePlayer(player);
-            }
-        });
-    }
+    // private void OnActivePlayers(JsonActivePlayer data)
+    // {
+    //     UnityMainThreadDispatcher.Instance().Enqueue(() =>
+    //     {
+    //         foreach (String player in data.Players)
+    //         {
+    //             AddPlayer.CreatePlayer(player);
+    //         }
+    //     });
+    // }
 
     private void OnMoveScene(JsonEvent data)
     {

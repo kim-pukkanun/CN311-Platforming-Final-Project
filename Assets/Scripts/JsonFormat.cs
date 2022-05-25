@@ -28,7 +28,8 @@ public class JsonPlayerPosition
     public float MoveX;
 }
 
-public class JsonActivePlayer
+public class JsonOnConnect
 {
+    public String ClientID;
     public String[] Players;
 }
