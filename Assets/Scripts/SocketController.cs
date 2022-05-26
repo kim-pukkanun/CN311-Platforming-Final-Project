@@ -28,13 +28,13 @@ public static class SocketController
                 onConnect.Players = connect.Players;
                 Thread thread = new Thread(onConnect.Start);
                 thread.Start();
-                // UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                // {
-                //     foreach (String player in connect.Players)
-                //     {
-                //         AddPlayer.CreatePlayer(player);
-                //     }
-                // });
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    foreach (String player in connect.Players)
+                    {
+                        AddPlayer.CreatePlayer(player);
+                    }
+                });
             }
 
             return true;

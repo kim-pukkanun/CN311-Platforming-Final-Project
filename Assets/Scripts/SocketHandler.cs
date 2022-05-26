@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -71,6 +72,7 @@ public class SocketHandler
 
     private void OnPlayerPosition(JsonPlayerPosition data)
     {
+        Thread.Sleep(10);
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             GameObject player = AddPlayer.GetCollection()[data.ClientID];

@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     public bool isSocket = false; 
     public bool isDeathCount = false;
 
-    private Vector3 position;
+    //private Vector3 position;
+    private float X;
+    private float Y;
     
     // Start is called before the first frame update
     private void Start()
@@ -51,16 +53,19 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void FixedUpdate() 
+    private void FixedUpdate()
     {
-        if (!position.Equals(gameObject.transform.position))
+        float posX = (float) Math.Round(gameObject.transform.position.x, 2);
+        float posY = (float) Math.Round(gameObject.transform.position.y, 2);
+        if (X != posX || Y != posY)
         {
-            position = gameObject.transform.position;
+            X = posX;
+            Y = posY;
             String playerPosition = JsonUtility.ToJson(new JsonPlayerPosition
             {
                 ClientID = SocketController.clientId,
-                X = gameObject.transform.position.x,
-                Y = gameObject.transform.position.y,
+                X = posX,
+                Y = posY,
                 Rotate = gameObject.transform.localRotation.eulerAngles.z,
                 MoveX = moveX
             });

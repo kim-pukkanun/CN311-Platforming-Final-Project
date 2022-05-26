@@ -22,7 +22,7 @@ public class AddPlayer : MonoBehaviour
     {
         GameObject newPlayer = null;
         GameObject player = GameObject.Find("Player");
-        newPlayer = Instantiate(player, new Vector3(0.0f, 0, 0), Quaternion.identity);
+        newPlayer = Instantiate(player, new Vector3(-5.21f, -1.61f, 0f), Quaternion.identity);
         newPlayer.name = "Player " + playerId;
         newPlayer.GetComponent<PlayerController>().playerID = playerId;
         GetCollection().Add(playerId, newPlayer);
