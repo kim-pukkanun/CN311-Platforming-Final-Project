@@ -43,11 +43,11 @@ namespace CN311_Platforming_Final_Project_Server
                     while ((i = stream.Read(bytesFrom, 0, bytesFrom.Length)) != 0)
                     {
                         data = System.Text.Encoding.ASCII.GetString(bytesFrom, 0, i);
-                        //Console.WriteLine(data);
                         break;
                     }
+                    stream.Flush();
                     
-                    Console.WriteLine(data);
+                    //Console.WriteLine(data);
                     if (!data.Equals("alive"))
                     {
                         try
